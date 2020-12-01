@@ -58,6 +58,8 @@ resource "aws_cloudwatch_metric_alarm" "mem_used_percent_alarm" {
 
   dimensions = {
     InstanceId = var.instance_id
+    ImageId = data.aws_instance.each_instance.ami
+    InstanceType = data.aws_instance.each_instance.instance_type
   }
 }
 
@@ -83,5 +85,10 @@ resource "aws_cloudwatch_metric_alarm" "disk_used_percent_alarm" {
 
   dimensions = {
     InstanceId = var.instance_id
+    path = "/"
+    ImageId = data.aws_instance.each_instance.ami
+    InstanceType = data.aws_instance.each_instance.instance_type
+    device = reverse(split("/", tolist(data.aws_instance.each_instance.root_block_device)[0].device_name))[0]
+    fstype = "ext4"
   }
 }
