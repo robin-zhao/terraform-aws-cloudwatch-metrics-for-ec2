@@ -42,5 +42,5 @@ variable threshold_ec2_mem {
 variable alarm_actions {
   description = "Alarm action list"
   type        = list(string)
-  default = []
+  default     = []
 }

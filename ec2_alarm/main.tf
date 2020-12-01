@@ -48,7 +48,7 @@ resource "aws_cloudwatch_metric_alarm" "mem_used_percent_alarm" {
   comparison_operator       = "GreaterThanOrEqualToThreshold"
   evaluation_periods        = "1"
   metric_name               = "mem_used_percent"
-  namespace                 = "AWS/EC2"
+  namespace                 = "CWAgent"
   period                    = "300"
   statistic                 = "Average"
   threshold                 = var.threshold_ec2_mem
@@ -73,7 +73,7 @@ resource "aws_cloudwatch_metric_alarm" "disk_used_percent_alarm" {
   comparison_operator       = "GreaterThanOrEqualToThreshold"
   evaluation_periods        = "1"
   metric_name               = "disk_used_percent"
-  namespace                 = "AWS/EC2"
+  namespace                 = "CWAgent"
   period                    = "300"
   statistic                 = "Average"
   threshold                 = var.threshold_ec2_disk
