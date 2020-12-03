@@ -6,9 +6,19 @@ variable threshold_ec2_disk {}
 variable threshold_ec2_mem {}
 variable alarm_actions {}
 variable region {}
+variable profile {}
 
 data "aws_instance" "each_instance" {
   instance_id = var.instance_id
+}
+
+data "external" "disk_dimensions" {
+  program = ["bash", "${path.module}/disk_dimensions.sh"]
+  query = {
+    profile = var.profile
+    region = var.region
+    instance_id = var.instance_id
+  }
 }
 
 resource "aws_cloudwatch_metric_alarm" "cpu_utilization_alarm" {
@@ -84,11 +94,11 @@ resource "aws_cloudwatch_metric_alarm" "disk_used_percent_alarm" {
   alarm_actions             = var.alarm_actions
 
   dimensions = {
-    InstanceId = var.instance_id
-    path = "/"
-    ImageId = data.aws_instance.each_instance.ami
-    InstanceType = data.aws_instance.each_instance.instance_type
-    device = reverse(split("/", tolist(data.aws_instance.each_instance.root_block_device)[0].device_name))[0]
-    fstype = "ext4"
+    InstanceId = data.external.disk_dimensions.result.InstanceId
+    path = data.external.disk_dimensions.result.path
+    ImageId = data.external.disk_dimensions.result.ImageId
+    InstanceType = data.external.disk_dimensions.result.InstanceType
+    device = data.external.disk_dimensions.result.device
+    fstype = data.external.disk_dimensions.result.fstype
   }
 }

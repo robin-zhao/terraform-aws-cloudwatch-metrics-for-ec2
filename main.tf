@@ -25,6 +25,7 @@ module instance_names {
   instance_id = each.key
 
   region             = var.region
+  profile            = var.profile
   tag_name           = var.tag_name
   tag_value          = var.tag_value
   threshold_ec2_cpu  = var.threshold_ec2_cpu
